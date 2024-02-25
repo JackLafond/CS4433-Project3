@@ -36,3 +36,6 @@ build/
 
 ### Mac OS ###
 .DS_Store
+data_problem1/INFECTED-small.txt
+data_problem1/PEOPLE-large.txt
+data_problem1/PEOPLE-SOME-INFECTED-large.txt
