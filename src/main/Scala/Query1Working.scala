@@ -19,6 +19,7 @@ object Query1 {
     closeContacts.foreach(println)
   }
 
+  // Loads people into Person objects from file
   def loadPeople(filename: String): List[Person] = {
     Source.fromFile(filename)
       .getLines()
@@ -29,15 +30,21 @@ object Query1 {
       .toList
   }
 
+  // Partitions people into cells
   def partitionIntoCells(people: List[Person], cellSize: Double): Map[(Int, Int), List[Person]] = {
     people.groupBy(person => ((person.x / cellSize).toInt, (person.y / cellSize).toInt))
   }
 
+  // Maps infected people to their close contacts
+  // Returns a list of tuples (pJ, infectI) where pJ is a close contact of infectI
+  // Runs once for each infected person
   def findCloseContacts(infected: List[Person], cellMap: Map[(Int, Int), List[Person]], cellSize: Double): List[(Person, Person)] = {
     infected.flatMap { infectI =>
       val cellX = (infectI.x / cellSize).toInt
       val cellY = (infectI.y / cellSize).toInt
 
+      // neighboringCells is a list of all cells that are within 1 unit of infectI, including the cell infectI is in
+      // TODO: only add neighboring cells for which the distance to infectI is less than 6
       val neighboringCells = for {
         offsetX <- -1 to 1
         offsetY <- -1 to 1
