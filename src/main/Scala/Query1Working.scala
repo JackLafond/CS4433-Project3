@@ -1,8 +1,8 @@
 import scala.io.Source
 
-case class Person(id: Int, x: Double, y: Double, age: Int, gender: String)
+object Query1Working {
 
-object Query1 {
+  case class Person(id: Int, x: Double, y: Double, age: Int, gender: String)
 
   def main(args: Array[String]): Unit = {
     val peopleFile = "PEOPLE-large-test.txt"
@@ -42,7 +42,6 @@ object Query1 {
     infected.flatMap { infectI =>
       val cellX = (infectI.x / cellSize).toInt
       val cellY = (infectI.y / cellSize).toInt
-
 
       // minOffsetX, minOffsetY, maxOffsetX, maxOffsetY are used to check if infectI is on the edge of a cell
       var minOffsetX, minOffsetY, maxOffsetX, maxOffsetY = 0
