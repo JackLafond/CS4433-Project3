@@ -43,18 +43,36 @@ object Query1 {
       val cellX = (infectI.x / cellSize).toInt
       val cellY = (infectI.y / cellSize).toInt
 
-      // neighboringCells is a list of all cells that are within 1 unit of infectI, including the cell infectI is in
-      // TODO: only add neighboring cells for which the distance to infectI is less than 6
+
+      // minOffsetX, minOffsetY, maxOffsetX, maxOffsetY are used to check if infectI is on the edge of a cell
+      var minOffsetX, minOffsetY, maxOffsetX, maxOffsetY = 0
+
+      if (infectI.x % cellSize <= 6) {
+        minOffsetX = -1
+      }
+      else if (infectI.x % cellSize >= cellSize - 6) {
+        maxOffsetX = 1
+      }
+      if (infectI.y % cellSize <= 6) {
+        minOffsetY = -1
+      }
+      else if (infectI.y % cellSize >= cellSize - 6) {
+        maxOffsetY = 1
+      }
+
+      // neighboringCells is a list of all cells that are within 6 units of infectI, including the cell infectI is in
       val neighboringCells = for {
-        offsetX <- -1 to 1
-        offsetY <- -1 to 1
+        offsetX <- minOffsetX to maxOffsetX
+        offsetY <- minOffsetY to maxOffsetY
       } yield (cellX + offsetX, cellY + offsetY)
 
       neighboringCells
         .flatMap(cellMap.getOrElse(_, List.empty))
         .filter { pJ =>
           // Check if pJ is within 6 units range of infectI
-          math.sqrt(math.pow(infectI.x - pJ.x, 2) + math.pow(infectI.y - pJ.y, 2)) <= 6.0
+          math.sqrt(math.pow(infectI.x - pJ.x, 2) + math.pow(infectI.y - pJ.y, 2)) <= 6.0 &&
+          // Do not print pair if infectI = pJ
+          infectI != pJ
         }
         .map(pJ => (pJ, infectI))
     }
