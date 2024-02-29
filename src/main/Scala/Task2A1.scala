@@ -1,6 +1,9 @@
 import org.apache.spark
+import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext, sql}
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{Row, SparkSession}
+
+import java.nio.file.Paths
 
 
 object Task2A1 {
@@ -24,8 +27,13 @@ object Task2A1 {
     df.createOrReplaceTempView("purchase_table")
 
     val Table1 = spark.sql("SELECT * FROM purchase_table WHERE TransTotal < 600")
+    Table1.collect()
 
     Table1.show()
+
+    val relPath = Paths.get("results_problem2") + "/output_Task2A1"
+    val rows: RDD[Row] = Table1.rdd
+    rows.saveAsTextFile(relPath)
 
     spark.stop()
   }

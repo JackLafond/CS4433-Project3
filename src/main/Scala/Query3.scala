@@ -6,7 +6,7 @@ import java.nio.file.Paths
 
 object Query3 {
 
-  val test: Boolean = false
+  val test: Boolean = true
   case class Person(id: Int, x: Double, y: Double, age: Int, gender: String, infected: String)
   case class Pair(p: Person, cells: Array[(Int, Int)])
   def main(args: Array[String]): Unit = {

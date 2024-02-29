@@ -1,5 +1,8 @@
+import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext, sql}
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{Row, SparkSession}
+
+import java.nio.file.Paths
 
 object Task2A3 {
   def main(args: Array[String]): Unit = {
@@ -37,6 +40,10 @@ object Task2A3 {
     val Table3 = spark.sql("SELECT CustID, ANY_VALUE(Age) AS Age, SUM(TransNumItems) AS TransNumItemsSum, ROUND(SUM(TransTotal), 2) AS TransTotalSum FROM joined_table WHERE Age < 25 GROUP BY CustID");
 
     Table3.show()
+
+    val relPath = Paths.get("results_problem2") + "/output_Task2A3"
+    val rows: RDD[Row] = Table3.rdd
+    rows.saveAsTextFile(relPath)
 
     spark.stop()
 
