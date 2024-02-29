@@ -1,6 +1,6 @@
 import scala.io.Source
 
-object Query2 {
+object Query1Working {
 
   case class Person(id: Int, x: Double, y: Double, age: Int, gender: String)
 
@@ -16,7 +16,7 @@ object Query2 {
 
     val closeContacts = findCloseContacts(infected, cellMap, cellSize)
 
-    closeContacts.distinct.foreach(println)
+    closeContacts.foreach(println)
   }
 
   // Loads people into Person objects from file
@@ -38,7 +38,7 @@ object Query2 {
   // Maps infected people to their close contacts
   // Returns a list of tuples (pJ, infectI) where pJ is a close contact of infectI
   // Runs once for each infected person
-  def findCloseContacts(infected: List[Person], cellMap: Map[(Int, Int), List[Person]], cellSize: Double): List[Int] = {
+  def findCloseContacts(infected: List[Person], cellMap: Map[(Int, Int), List[Person]], cellSize: Double): List[(Person, Person)] = {
     infected.flatMap { infectI =>
       val cellX = (infectI.x / cellSize).toInt
       val cellY = (infectI.y / cellSize).toInt
@@ -70,10 +70,10 @@ object Query2 {
         .filter { pJ =>
           // Check if pJ is within 6 units range of infectI
           math.sqrt(math.pow(infectI.x - pJ.x, 2) + math.pow(infectI.y - pJ.y, 2)) <= 6.0 &&
-            // Do not print pair if infectI = pJ
-            infectI != pJ
+          // Do not print pair if infectI = pJ
+          infectI != pJ
         }
-        .map(pJ => pJ.id)
+        .map(pJ => (pJ, infectI))
     }
   }
 }
